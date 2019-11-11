@@ -4,6 +4,12 @@ const nodemailer = require("nodemailer");
 const port = 4000;
 const app = express();
 
+var accountSid = 'AC2d3e805e3c944b3939772523450aeb45'; 
+var authToken = 'ffbc9001555fa1d386752870453a4395';   
+var twilio = require('twilio');
+var client = new twilio(accountSid, authToken);
+//(202) 930-9699s
+
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
 app.get("/", (req, res) => {
@@ -47,6 +53,22 @@ app.post("/email", async (req, res) => {
     res.status(400).send({ error: error.message });
   }
 });
+
+app.post("/sms",async (req,res)=>{
+  console.log("----------->");
+  
+  client.messages.create({
+    body: 'Hello',
+    to: '+919997816828',  
+    from: '+12029309699'
+  }).then((message) => {
+    console.log(message.sid)
+    res.send("ok")
+  }
+    ).catch(error=>{
+      console.log(error)
+    });
+})
 
 app.listen(port, () => {
   console.log("server start");
